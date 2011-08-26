@@ -1,7 +1,7 @@
 #!/bin/ksh
 
 PKG_LIST_FILE="$(dirname $(whence $0))/PACKAGES_LIST"
-REPO_URL_MAIN="http://172.23.251.108:10000/"
+REPO_URL_MAIN="http://172.23.0.1:10000/"
 REPO_URL_LGCY="http://pkg.openindiana.org/legacy"
 
 
