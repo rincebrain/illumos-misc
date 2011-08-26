@@ -33,6 +33,7 @@ developer/dtrace/toolkit
 developer/linker
 developer/macro/cpp
 developer/object-file
+developer/versioning/git
 diagnostic/acpidump
 diagnostic/constype
 diagnostic/cpu-counters

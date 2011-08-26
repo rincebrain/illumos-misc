@@ -1,7 +1,7 @@
 #!/bin/ksh
 
 PKG_LIST_FILE="$(dirname $(whence $0))/PACKAGES_LIST"
-REPO_URL_MAIN="http://pkg.openindiana.org/dev"
+REPO_URL_MAIN="http://172.23.251.108:10000/"
 REPO_URL_LGCY="http://pkg.openindiana.org/legacy"
 
 
@@ -13,7 +13,20 @@ case "$REQUEST_METHOD" in
     cat <<EOF
 <!DOCTYPE auto_install SYSTEM "file:///usr/share/auto_install/ai.dtd">
 <auto_install>
-  <ai_instance name="default">
+  <ai_instance name="default" auto_reboot="true">
+    <target>
+         <target_device>
+         	<disk>
+	         	<disk_keyword key="boot_disk" />
+          <partition name="1" action="delete" />
+          <partition name="2" action="delete" />
+          <partition name="3" action="delete" />
+          <partition name="4" action="delete" />
+	  <partition name="0" action="create" part_type="191" />
+	  <slice name="0" action="create" is_root="true" force="true" />
+        </disk>
+ 	</target_device>
+    </target>
     <software>
       <source>
         <publisher name="openindiana.org">
@@ -51,12 +64,12 @@ EOF
             </property_group>
 
             <property_group name="root_account" type="application">
-              <propval name="password" type="astring" value="\$5\$VgppCOxA\$ycFmYW4ObRRHhtsGEygDdexk5bugqgSiaSR9niNCouC"/>
-              <propval name="type" type="astring" value="role"/>
+                <propval name="password" type="astring" value="9Nd/cwBcNWFZg"/>
+                <propval name="type" type="astring" value="role"/>
             </property_group>
 
             <property_group name="other_sc_params" type="application">
-              <propval name="timezone" type="astring" value="Australia/NSW"/>
+              <propval name="timezone" type="astring" value="GMT"/>
               <propval name="hostname" type="astring" value="openindiana"/>
             </property_group>
           </instance>
@@ -82,6 +95,81 @@ EOF
       </service_bundle>
       -->
     </sc_embedded_manifest>
+    <add_drivers>
+      <!--
+	    Driver Updates: This section is for adding driver packages to the
+            boot environment before the installation takes place.  The
+            installer can then access all devices on the system.  The
+            packages installed in the boot environment will also be installed
+            on the target.
+
+            A <search_all> entry performs a search for devices which are
+            missing their drivers.  A repository publisher and location
+            may be specified, and that repository and its database will
+            be used.  If no publisher and location is specified, the
+            configured repositories will be used.
+            (See pkg publisher command.)  If <addall> is specified as
+            "true", then drivers the database says are third-party drivers
+            will be added like all others; otherwise third-party drivers
+            will not be added.
+
+                <search_all addall="true">
+                    <source>
+                        <publisher name="openindiana.org">
+                            <origin name="http://pkg.openindiana.org/stable"/>
+                        </publisher>
+                    </source>
+                </search_all>
+
+            <software> entries are user-provided specifications of packages
+            needed in order to perform the install.  types are P5I, SVR4, DU.
+            A <software_data> action of "noinstall" inhibits adding to target.
+
+            P5I: A pkg(5) P5I file, full path is in the source/publisher/origin.
+            Path may be to a local file or an http or ftp specification.
+                <software>
+                    <source>
+                        <publisher>
+                            <origin
+				name=
+		"http://pkg.openindiana.org/stable/p5i/0/driver/firewire.p5i"/>
+                        </publisher>
+                    </source>
+		    <software_data type="P5I"/>
+                </software>
+
+            SVR4: An SVR4 package spec. The source/publisher/origin corresponds
+            to the directory containing the packages.  The 
+	    software/software_data/name refers tp the package's top level
+	    directory or the package's datastream file.
+
+                <software>
+                    <source>
+                        <publisher>
+                            <origin name="/export/package_dir"/>
+                        </publisher>
+                    </source>
+                    <software_data type="SVR4">
+                        <name>my_disk_driver.d</name>
+                    </software_data>
+                </software>
+
+            DU: An ITU (Install Time Update) or Driver Update image.
+            The source/publisher/origin refers to the path just above the 
+	    image's DU directory (if expanded) or the name of the .iso image.  
+	    All packages in the image will be added.
+
+                <software>
+                    <source>
+                        <publisher>
+                            <origin name="/export/duimages/mydriver.iso"/>
+                        </publisher>
+                    </source>
+                    <software_data type="DU"/>
+                </software>	
+      -->
+      <search_all/>
+    </add_drivers>
   </ai_instance>
 </auto_install>
 EOF
